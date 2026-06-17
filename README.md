@@ -1,93 +1,145 @@
-# GAMBLANG
-GAMBLANG è un linguaggio di programmazione probabilistico che introduce il concetto di casualità e gestione del rischio sia nella memorizzazione delle variabili sia nel controllo del flusso. 
-Il sorgente viene analizzato tramite un parser LALR, validato semanticamente e infine transpilato in codice C standard, che viene compilato ed eseguito automaticamente tramite `gcc`.
+# Gamblang 
+
+GAMBLANG è un linguaggio di programmazione sperimentale che introduce elementi di casualità direttamente nel linguaggio. Oltre alle variabili tradizionali, supporta strutture che mantengono una cronologia dei valori assegnati e costrutti condizionali basati sulla probabilità.
+
+Il compilatore utilizza un parser LALR per analizzare il sorgente, esegue controlli semantici sui tipi e genera codice C standard, che viene poi compilato ed eseguito tramite `gcc`.
 
 ---
 
-## Sistema dei Tipi e Sintassi
+## Tipi di variabili
 
-Il linguaggio si basa su tre costrutti di dichiarazione per le variabili e su un blocco condizionale specifico per la gestione del caso:
+### Variabili deterministiche (`steady`)
 
-### 1. Variabili Deterministiche (`steady`)
-
-Rappresentano le variabili tradizionali stabili. Si dichiarano ed assegnano usando l'operatore `=`.
+Le variabili `steady` si comportano come le normali variabili presenti nella maggior parte dei linguaggi.
 
 ```gamblang
 steady x = 10
 x = 20
 ```
 
-### 2. Variabili con Memoria (`gamble`)
+---
 
-Variabili speciali che tengono traccia della cronologia dei valori assegnati. La dichiarazione e i successivi inserimenti avvengono tramite l'operatore `<-`. Quando si richiama la variabile all'interno di un'espressione, questa restituisce uno dei valori salvati nella cronologia, estratto in modo casuale.
+### Variabili con cronologia (`gamble`)
+
+Le variabili `gamble` memorizzano tutti i valori assegnati nel tempo. Ogni nuovo valore viene aggiunto alla cronologia usando l'operatore `<-`.
+
+Quando la variabile viene utilizzata in un'espressione, uno dei valori salvati viene scelto casualmente.
 
 ```gamblang
 gamble g <- 5
 g <- 15
 g <- 25
-print g  # Restituirà casualmente 5, 15 o 25
+
+print g
 ```
 
-### 3. Lancio della Moneta (`coin`)
-
-Variabili booleane alimentate da una probabilità (compresa tra `0.0` e `1.0`). Al momento della dichiarazione, viene calcolato un lancio casuale: se la probabilità ha successo il valore sarà `1`, altrimenti `0`.
-
-```gamblang
-coin c = 0.75  # 75% di probabilità di essere 1 (true)
-```
-
-### 4. Flusso Condizionale Probabilistico (`risky`)
-
-Un costrutto condizionale regolato dal caso. Il blocco interno viene eseguito solo se il controllo probabilistico ha successo, altrimenti viene eseguito il blocco alternativo `or do`.
-
-```gamblang
-risky(0.5) do
-    print "Il blocco è stato eseguito"
-or do
-    print "Il blocco è fallito"
-end
-```
-
-GAMBLANG supporta inoltre le strutture di controllo standard come `if/else`, i cicli `loop ... do ... end`, l'input da tastiera tramite `ask` (solo per variabili `steady`) e le operazioni aritmetiche/logiche di base.
+L'output potrà essere `5`, `15` oppure `25`.
 
 ---
 
-## Architettura del Compilatore
+### Variabili probabilistiche (`coin`)
 
-La pipeline di compilazione è suddivisa nei seguenti moduli:
+Una variabile `coin` rappresenta il risultato di un lancio probabilistico.
 
-* **`gamblang`**: Script d'ingresso Bash che centralizza l'esecuzione del compilatore.
-* **`main.py`**: Punto di ingresso che coordina il parsing, l'analisi semantica, scrive il sorgente temporaneo `output.c` e invoca `gcc` per la build finale.
-* **`gamblang.lark`**: Grammatica formale del linguaggio definita con la sintassi Lark.
-* **`semantics.py`**: Analizzatore semantico. Costruisce la Symbol Table e verifica la coerenza dei tipi (impedendo ad esempio l'uso di `=` su variabili `gamble` o l'uso di `ask` su variabili non `steady`).
-* **`codegen.py`**: Generatore di codice C. Mappa i costrutti probabilistici in strutture C native (come struct con array di storici e macro di clamping per i limiti di probabilità).
+Il valore assegnato deve essere compreso tra `0.0` e `1.0` e indica la probabilità che la variabile assuma valore `1`.
+
+```gamblang
+coin c = 0.75
+```
+
+In questo caso `c` avrà il 75% di probabilità di valere `1` e il 25% di probabilità di valere `0`.
+
+---
+
+## Controllo del flusso
+
+### Blocco `risky`
+
+Il costrutto `risky` esegue un blocco di codice solo se un controllo probabilistico ha successo.
+
+```gamblang
+risky(0.5) do
+    print "Operazione riuscita"
+or do
+    print "Operazione fallita"
+end
+```
+
+Con probabilità `0.5` verrà eseguito il primo blocco, altrimenti il secondo.
+
+---
+
+### Costrutti supportati
+
+GAMBLANG include anche:
+
+* `if / else`
+* cicli `loop ... do ... end`
+* input da tastiera tramite `ask`
+* operatori aritmetici
+* operatori relazionali e logici
+
+L'istruzione `ask` è consentita esclusivamente per variabili di tipo `steady`.
+
+---
+
+## Struttura del progetto
+
+Il compilatore è organizzato nei seguenti moduli:
+
+* **`gamblang`**: script di avvio del compilatore.
+* **`main.py`**: parsing, analisi semantica e compilazione finale.
+* **`gamblang.lark`**: grammatica del linguaggio definita con Lark.
+* **`semantics.py`**: gestione della symbol table e verifica dei tipi.
+* **`codegen.py`**: generazione del codice C.
+
+---
+
+## Come funziona
+
+La compilazione segue questi passaggi:
+
+1. Parsing del sorgente tramite LALR.
+2. Analisi semantica e controllo dei tipi.
+3. Generazione del codice C.
+4. Compilazione tramite `gcc`.
+5. Esecuzione del programma generato.
 
 ---
 
 ## Requisiti
 
 * Python 3
-* Libreria Lark (`pip install lark`)
-* Compilatore `gcc` configurato nel PATH del sistema
+* Lark
+
+```bash
+pip install lark
+```
+
+* GCC disponibile nel PATH di sistema
 
 ---
 
-## Installazione e Uso
+## Installazione
 
-1. Clona il repository:
+Clona il repository:
 
 ```bash
-git clone https://github.com/tuo-username/gamblang.git
-cd gamblang
+git clone https://github.com/Lucas5N/Gamblang.git
+cd Gamblang
 ```
 
-2. Configura i permessi di esecuzione per lo script di avvio:
+Rendi eseguibile lo script principale:
 
 ```bash
 chmod +x gamblang
 ```
 
-3. Esegui il tuo codice sorgente (es. `programma.gamblang`):
+---
+
+## Utilizzo
+
+Crea un file sorgente, ad esempio `programma.gamblang`, ed eseguilo con:
 
 ```bash
 ./gamblang programma.gamblang
@@ -95,22 +147,27 @@ chmod +x gamblang
 
 ---
 
-## Esempio Completo
+## Esempio
 
 ```gamblang
-# Dichiarazioni iniziali
 steady soglia = 0.4
+
 coin moneta = 0.65
+
 gamble storico <- 10
 storico <- 20
 storico <- 30
+
 if moneta == 1
-    print "Lancio della moneta riuscito!"
+    print "Lancio riuscito!"
     print storico
 end
+
 risky(soglia) do
-    print "Rischio calcolato con successo"
+    print "Operazione completata"
 or do
-    print "Tentativo fallito"
+    print "Operazione fallita"
 end
 ```
+
+Ogni esecuzione può produrre risultati diversi in base ai valori estratti dalle variabili `gamble` e agli eventi probabilistici generati da `coin` e `risky`.
