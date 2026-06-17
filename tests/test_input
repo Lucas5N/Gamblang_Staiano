@@ -1,0 +1,13 @@
+print "--- TEST 05: Input Interattivo ---"
+
+steady scelta = 0
+print "Inserisci un numero fisso (steady):"
+ask scelta
+print "Hai inserito:"
+print scelta
+
+gamble paniere <- 10.5
+print "Inserisci un numero da aggiungere alla cronologia stocastica (gamble):"
+ask paniere
+print "Estrazione casuale tra 10.5 e il tuo numero:"
+print paniere

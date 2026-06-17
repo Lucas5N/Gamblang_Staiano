@@ -1,0 +1,12 @@
+print "--- TEST 04: Variabili Gamble (Stocastiche) ---"
+
+gamble val <- 1.1
+val <- 2.2
+val <- 3.3
+val <- 4.4
+
+print "Estrazioni casuali dallo storico (1.1, 2.2, 3.3 o 4.4):"
+print val
+print val
+print val
+print val

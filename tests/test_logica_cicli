@@ -1,0 +1,19 @@
+print "--- TEST 03: Cicli e Logica Booleana ---"
+
+steady x = 10
+steady y = 20
+steady contatore = 0
+
+// Test operatori logici combinati
+if x < 15 and not y == 0
+    print "Logica AND + NOT corretta"
+end
+
+if x == 99 or y >= 20
+    print "Logica OR corretta"
+end
+
+loop contatore < 3 do
+    print "Iterazione ciclo"
+    contatore = contatore + 1
+end

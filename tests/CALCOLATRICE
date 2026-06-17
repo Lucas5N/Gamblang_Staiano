@@ -1,0 +1,61 @@
+gamble x <- -1
+
+steady num1 = 0
+steady num2 = 0
+steady ris = 0
+
+loop x != 0 do
+print "----------MENU----------"
+print "[1] SOMMA"
+print "[2] SOTTRAZIONE"
+print "[3] MOLTIPLICAZIONE"
+print "[4] DIVISIONE"
+print "[0] PER USCIRE"
+
+ask x
+
+    if x == 1
+        print "Inserisci il primo numero:"
+        ask num1
+        print "Inserisci il secondo numero"
+        ask num2
+        ris = num1 + num2
+        print "Il risultato della somma è: "
+        print ris
+    end
+
+    if x == 2
+        print "Inserisci il primo numero:"
+        ask num1
+        print "Inserisci il secondo numero"
+        ask num2
+        ris = num1 - num2
+        print "Il risultato della sottrazione è: "
+        print ris
+    end
+
+    if x == 3
+        print "Inserisci il primo numero:"
+        ask num1
+        print "Inserisci il secondo numero"
+        ask num2
+        ris = num1 * num2
+        print "Il risultato della moltiplicazione è: "
+        print ris
+    end
+
+   if x == 4
+    print "Inserisci il primo numero:"
+    ask num1
+    print "Inserisci il secondo numero"
+    ask num2
+    if num2 == 0
+        print "Non puoi dividere per 0"
+    else
+        ris = num1 / num2
+        print "Il risultato della divisione è: "
+        print ris
+    end
+end
+
+end

@@ -1,0 +1,21 @@
+print "--- TEST 02: Tipi Probabilistici e Clamping ---"
+
+coin probabilita_normale = 0.50
+coin clamp_superiore = 2.5
+coin clamp_inferiore = -0.5
+
+print probabilita_normale
+print clamp_superiore
+print clamp_inferiore
+
+risky(1.5) do
+    print "Questo blocco sicuro al 100% viene eseguito"
+or do
+    print "Questo non deve apparire"
+end
+
+risky(-0.2) do
+    print "Questo non deve apparire"
+or do
+    print "Questo blocco al 0% viene eseguito per forza"
+end

@@ -1,0 +1,10 @@
+steady a = 15
+steady b = 5
+steady ris_add = a + b
+steady ris_complessivo = (a - b) * (ris_add / 2)
+steady num_negativo = -ris_complessivo
+
+print "--- TEST 01: Operazioni e Precedenze ---"
+print ris_add          // Ci si aspetta: 20
+print ris_complessivo  // Ci si aspetta: 100
+print num_negativo     // Ci si aspetta: -100
