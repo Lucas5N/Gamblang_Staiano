@@ -1,4 +1,4 @@
-# Gamblang 
+# Gamblang 🍀
 
 Gamblang è un linguaggio di programmazione sperimentale che introduce elementi di casualità direttamente nel linguaggio. Oltre alle variabili tradizionali, supporta strutture che mantengono una cronologia dei valori assegnati e costrutti condizionali basati sulla probabilità.
 
